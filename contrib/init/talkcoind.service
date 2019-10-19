@@ -1,0 +1,68 @@
+# It is not recommended to modify this file in-place, because it will
+# be overwritten during package upgrades. If you want to add further
+# options or overwrite existing ones then use
+# $ systemctl edit talkcoind.service
+# See "man systemd.service" for details.
+
+# Note that almost all daemon options could be specified in
+# /etc/talkcoin/talkcoin.conf, except for those explicitly specified as arguments
+# in ExecStart=
+
+[Unit]
+Description=Talkcoin daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/talkcoind -daemon \
+                            -pid=/run/talkcoind/talkcoind.pid \
+                            -conf=/etc/talkcoin/talkcoin.conf \
+                            -datadir=/var/lib/talkcoind
+
+# Process management
+####################
+
+Type=forking
+PIDFile=/run/talkcoind/talkcoind.pid
+Restart=on-failure
+
+# Directory creation and permissions
+####################################
+
+# Run as talkcoin:talkcoin
+User=talkcoin
+Group=talkcoin
+
+# /run/talkcoind
+RuntimeDirectory=talkcoind
+RuntimeDirectoryMode=0710
+
+# /etc/talkcoin
+ConfigurationDirectory=talkcoin
+ConfigurationDirectoryMode=0710
+
+# /var/lib/talkcoind
+StateDirectory=talkcoind
+StateDirectoryMode=0710
+
+# Hardening measures
+####################
+
+# Provide a private /tmp and /var/tmp.
+PrivateTmp=true
+
+# Mount /usr, /boot/ and /etc read-only for the process.
+ProtectSystem=full
+
+# Disallow the process and all of its children to gain
+# new privileges through execve().
+NoNewPrivileges=true
+
+# Use a new /dev namespace only populated with API pseudo devices
+# such as /dev/null, /dev/zero and /dev/random.
+PrivateDevices=true
+
+# Deny the creation of writable and executable memory mappings.
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target
