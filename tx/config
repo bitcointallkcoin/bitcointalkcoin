@@ -1,0 +1,7 @@
+[main]
+host = https://www.transifex.com
+
+[bitcointalkcoin.qt-translation-018x]
+file_filter = src/qt/locale/bitcointalkcoin_<lang>.ts
+source_file = src/qt/locale/bitcointalkcoin_en.ts
+source_lang = en
